@@ -1,0 +1,243 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#1f2937" />
+    <title>放課後予定共有アプリ</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="background-orb background-orb-one"></div>
+    <div class="background-orb background-orb-two"></div>
+
+    <section class="login-screen" id="loginScreen" aria-labelledby="loginTitle">
+      <div class="login-card panel">
+        <div class="login-copy">
+          <p class="eyebrow">Welcome Back</p>
+          <h1 id="loginTitle">放課後予定共有アプリ</h1>
+          <p class="lede">
+            ログインすると、友達の予定・チャット・位置情報をひと目で確認できます。
+          </p>
+          <div class="login-points">
+            <span class="login-pill">予定共有</span>
+            <span class="login-pill">グループ管理</span>
+            <span class="login-pill">位置情報</span>
+          </div>
+        </div>
+
+        <form class="login-form" id="loginForm">
+          <label>
+            <span>メールアドレス</span>
+            <input id="loginEmail" type="email" placeholder="example@school.jp" value="student@example.com" required />
+          </label>
+          <label>
+            <span>パスワード</span>
+            <input id="loginPassword" type="password" placeholder="••••••••" value="password123" required />
+          </label>
+          <button class="primary-button login-button" type="submit">ログインして開始</button>
+          <p class="login-note">デモ画面なので、入力内容はその場で確認して表示します。</p>
+        </form>
+      </div>
+    </section>
+
+    <main class="shell app-shell is-hidden" id="appShell">
+      <section class="hero panel">
+        <div class="hero-copy">
+          <p class="eyebrow">After School Planner</p>
+          <h1>友達の予定が、開いた瞬間にわかる。</h1>
+          <p class="lede">
+            放課後の集合を素早く決めるための予定共有アプリ。
+            チャット、カレンダー、グループ、電話、位置情報をひとつにまとめました。
+          </p>
+
+          <div class="hero-actions">
+            <button class="primary-button" id="shareScheduleButton">予定を共有する</button>
+            <button class="secondary-button" id="callButton">電話をかける</button>
+          </div>
+        </div>
+
+        <aside class="hero-summary">
+          <div class="summary-card accent">
+            <span>今日の空き時間</span>
+            <strong id="summarySlot">17:30 - 19:00</strong>
+          </div>
+          <div class="summary-card">
+            <span>共有中のグループ</span>
+            <strong id="summaryGroup">放課後メンバー</strong>
+          </div>
+          <div class="summary-card">
+            <span>近くにいる友達</span>
+            <strong id="summaryNearby">3人</strong>
+          </div>
+        </aside>
+      </section>
+
+      <section class="grid-layout">
+        <section class="panel schedule-panel">
+          <div class="panel-header">
+            <div>
+              <p class="section-label">Calendar</p>
+              <h2>今日の予定がすぐ見える</h2>
+            </div>
+            <span class="pill" id="activeGroupPill">放課後メンバー</span>
+          </div>
+
+          <div class="calendar-strip" id="calendarStrip"></div>
+
+          <div class="calendar-focus">
+            <div>
+              <p class="calendar-focus-label">次の予定</p>
+              <strong id="calendarSlot">17:30 - 19:00</strong>
+            </div>
+            <div class="calendar-focus-copy" id="calendarFocusCopy">
+              予定を色分けして見やすく表示します。
+            </div>
+          </div>
+
+          <div class="availability-bar">
+            <div class="availability-fill" id="availabilityFill"></div>
+          </div>
+
+          <div class="schedule-list" id="scheduleList"></div>
+
+          <form class="add-form" id="scheduleForm">
+            <input id="scheduleName" type="text" placeholder="予定名（例: カフェ、部活、塾）" required />
+            <input id="scheduleTime" type="text" placeholder="時間（例: 18:00 - 19:30）" required />
+            <button class="primary-button" type="submit">予定を追加</button>
+          </form>
+        </section>
+
+        <section class="panel sidebar-panel">
+          <div class="panel-header">
+            <div>
+              <p class="section-label">Groups</p>
+              <h2>グループ</h2>
+            </div>
+            <button class="ghost-button" id="createGroupButton">新規作成</button>
+          </div>
+
+          <div class="group-tabs" id="groupTabs"></div>
+
+          <div class="friends-card">
+            <div class="panel-subheader">
+              <h3>メンバーの状態</h3>
+              <span class="muted" id="memberCount">0人</span>
+            </div>
+            <div class="friend-list" id="friendList"></div>
+          </div>
+        </section>
+      </section>
+
+      <section class="grid-layout lower-grid">
+        <section class="panel chat-panel">
+          <div class="panel-header">
+            <div>
+              <p class="section-label">Chat</p>
+              <h2>グループチャット</h2>
+            </div>
+            <button class="ghost-button" id="openChatAction">すぐ送る</button>
+          </div>
+
+          <div class="chat-thread" id="chatThread"></div>
+
+          <form class="chat-form" id="chatForm">
+            <input id="chatInput" type="text" placeholder="メッセージを入力" />
+            <button class="primary-button" type="submit">送信</button>
+          </form>
+        </section>
+
+        <section class="panel action-panel">
+          <div class="panel-header">
+            <div>
+              <p class="section-label">Actions</p>
+              <h2>すぐ使う機能</h2>
+            </div>
+          </div>
+
+          <div class="action-stack">
+            <article class="action-card">
+              <div>
+                <h3>電話機能</h3>
+                <p>重要な確認は通話で一気に決める。</p>
+              </div>
+              <button class="secondary-button" id="quickCallButton">通話開始</button>
+            </article>
+
+            <article class="action-card">
+              <div>
+                <h3>位置情報共有</h3>
+                <p>近くにいる友達をすぐ確認できる。</p>
+              </div>
+              <label class="toggle">
+                <input id="locationToggle" type="checkbox" checked />
+                <span class="toggle-track"></span>
+              </label>
+            </article>
+
+            <article class="action-card location-card">
+              <div class="panel-subheader">
+                <h3>現在の位置共有</h3>
+                <span class="muted" id="locationStatus">共有中</span>
+              </div>
+              <div class="location-list" id="locationList"></div>
+            </article>
+          </div>
+        </section>
+      </section>
+    </main>
+
+    <template id="scheduleItemTemplate">
+      <article class="schedule-item">
+        <div class="schedule-color"></div>
+        <div>
+          <h3 class="schedule-title"></h3>
+          <p class="schedule-time"></p>
+          <p class="schedule-meta"></p>
+        </div>
+        <span class="status-badge"></span>
+      </article>
+    </template>
+
+    <template id="calendarDayTemplate">
+      <article class="calendar-day">
+        <p class="calendar-day-label"></p>
+        <strong class="calendar-day-date"></strong>
+        <span class="calendar-day-count"></span>
+      </article>
+    </template>
+
+    <template id="friendItemTemplate">
+      <article class="friend-item">
+        <div class="friend-avatar"></div>
+        <div class="friend-body">
+          <strong class="friend-name"></strong>
+          <p class="friend-meta"></p>
+        </div>
+        <button class="mini-button friend-toggle"></button>
+      </article>
+    </template>
+
+    <template id="chatMessageTemplate">
+      <article class="chat-message">
+        <div class="message-meta">
+          <strong class="message-author"></strong>
+          <span class="message-time"></span>
+        </div>
+        <p class="message-body"></p>
+      </article>
+    </template>
+
+    <template id="locationItemTemplate">
+      <article class="location-item">
+        <div>
+          <strong class="location-name"></strong>
+          <p class="location-place"></p>
+        </div>
+        <span class="location-distance"></span>
+      </article>
+    </template>
+
+    <script src="./app.js"></script>
+  </body>
+</html>
